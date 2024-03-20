@@ -1,4 +1,6 @@
 class Facility < ApplicationRecord
+  enum status: %i[ draft visible hidden ]
+
   has_many :addresses, dependent: :delete_all
   has_many :contacts, dependent: :delete_all
   has_many :staff_members, dependent: :delete_all

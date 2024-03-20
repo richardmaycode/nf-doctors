@@ -27,7 +27,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_20_153759) do
   end
 
   create_table "contacts", force: :cascade do |t|
-    t.integer "type"
+    t.integer "kind"
     t.string "value"
     t.bigint "facility_id", null: false
     t.datetime "created_at", null: false
@@ -42,11 +42,29 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_20_153759) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "disciplines_facilities", force: :cascade do |t|
+    t.bigint "discipline_id", null: false
+    t.bigint "facility_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["discipline_id"], name: "index_disciplines_facilities_on_discipline_id"
+    t.index ["facility_id"], name: "index_disciplines_facilities_on_facility_id"
+  end
+
   create_table "expertises", force: :cascade do |t|
     t.string "name"
     t.string "abbreviation"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "expertises_facilities", force: :cascade do |t|
+    t.bigint "expertise_id", null: false
+    t.bigint "facility_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["expertise_id"], name: "index_expertises_facilities_on_expertise_id"
+    t.index ["facility_id"], name: "index_expertises_facilities_on_facility_id"
   end
 
   create_table "facilities", force: :cascade do |t|
@@ -58,31 +76,13 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_20_153759) do
     t.index ["name"], name: "index_facilities_on_name", unique: true
   end
 
-  create_table "facilities_and_disciplines", force: :cascade do |t|
-    t.bigint "facility_id", null: false
-    t.bigint "discipline_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["discipline_id"], name: "index_facilities_and_disciplines_on_discipline_id"
-    t.index ["facility_id"], name: "index_facilities_and_disciplines_on_facility_id"
-  end
-
-  create_table "facilities_and_expertises", force: :cascade do |t|
-    t.bigint "facility_id", null: false
-    t.bigint "expertise_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["expertise_id"], name: "index_facilities_and_expertises_on_expertise_id"
-    t.index ["facility_id"], name: "index_facilities_and_expertises_on_facility_id"
-  end
-
-  create_table "facilities_and_specialties", force: :cascade do |t|
+  create_table "facilities_specialties", force: :cascade do |t|
     t.bigint "facility_id", null: false
     t.bigint "specialty_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["facility_id"], name: "index_facilities_and_specialties_on_facility_id"
-    t.index ["specialty_id"], name: "index_facilities_and_specialties_on_specialty_id"
+    t.index ["facility_id"], name: "index_facilities_specialties_on_facility_id"
+    t.index ["specialty_id"], name: "index_facilities_specialties_on_specialty_id"
   end
 
   create_table "specialties", force: :cascade do |t|
@@ -104,11 +104,11 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_20_153759) do
 
   add_foreign_key "addresses", "facilities"
   add_foreign_key "contacts", "facilities"
-  add_foreign_key "facilities_and_disciplines", "disciplines"
-  add_foreign_key "facilities_and_disciplines", "facilities"
-  add_foreign_key "facilities_and_expertises", "expertises"
-  add_foreign_key "facilities_and_expertises", "facilities"
-  add_foreign_key "facilities_and_specialties", "facilities"
-  add_foreign_key "facilities_and_specialties", "specialties"
+  add_foreign_key "disciplines_facilities", "disciplines"
+  add_foreign_key "disciplines_facilities", "facilities"
+  add_foreign_key "expertises_facilities", "expertises"
+  add_foreign_key "expertises_facilities", "facilities"
+  add_foreign_key "facilities_specialties", "facilities"
+  add_foreign_key "facilities_specialties", "specialties"
   add_foreign_key "staff_members", "facilities"
 end
