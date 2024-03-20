@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_03_20_150518) do
+ActiveRecord::Schema[7.1].define(version: 2024_03_20_153759) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -26,13 +26,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_20_150518) do
     t.index ["facility_id"], name: "index_addresses_on_facility_id"
   end
 
-  create_table "age_groups", force: :cascade do |t|
-    t.string "name"
-    t.string "description"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "contacts", force: :cascade do |t|
     t.integer "type"
     t.string "value"
@@ -40,6 +33,20 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_20_150518) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["facility_id"], name: "index_contacts_on_facility_id"
+  end
+
+  create_table "disciplines", force: :cascade do |t|
+    t.string "name"
+    t.string "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "expertises", force: :cascade do |t|
+    t.string "name"
+    t.string "abbreviation"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "facilities", force: :cascade do |t|
@@ -51,13 +58,22 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_20_150518) do
     t.index ["name"], name: "index_facilities_on_name", unique: true
   end
 
-  create_table "facilities_and_age_groups", force: :cascade do |t|
+  create_table "facilities_and_disciplines", force: :cascade do |t|
     t.bigint "facility_id", null: false
-    t.bigint "age_group_id", null: false
+    t.bigint "discipline_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["age_group_id"], name: "index_facilities_and_age_groups_on_age_group_id"
-    t.index ["facility_id"], name: "index_facilities_and_age_groups_on_facility_id"
+    t.index ["discipline_id"], name: "index_facilities_and_disciplines_on_discipline_id"
+    t.index ["facility_id"], name: "index_facilities_and_disciplines_on_facility_id"
+  end
+
+  create_table "facilities_and_expertises", force: :cascade do |t|
+    t.bigint "facility_id", null: false
+    t.bigint "expertise_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["expertise_id"], name: "index_facilities_and_expertises_on_expertise_id"
+    t.index ["facility_id"], name: "index_facilities_and_expertises_on_facility_id"
   end
 
   create_table "facilities_and_specialties", force: :cascade do |t|
@@ -70,9 +86,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_20_150518) do
   end
 
   create_table "specialties", force: :cascade do |t|
-    t.string "name"
+    t.string "name", limit: 30
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_specialties_on_name", unique: true
   end
 
   create_table "staff_members", force: :cascade do |t|
@@ -87,8 +104,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_20_150518) do
 
   add_foreign_key "addresses", "facilities"
   add_foreign_key "contacts", "facilities"
-  add_foreign_key "facilities_and_age_groups", "age_groups"
-  add_foreign_key "facilities_and_age_groups", "facilities"
+  add_foreign_key "facilities_and_disciplines", "disciplines"
+  add_foreign_key "facilities_and_disciplines", "facilities"
+  add_foreign_key "facilities_and_expertises", "expertises"
+  add_foreign_key "facilities_and_expertises", "facilities"
   add_foreign_key "facilities_and_specialties", "facilities"
   add_foreign_key "facilities_and_specialties", "specialties"
   add_foreign_key "staff_members", "facilities"

@@ -8,5 +8,22 @@
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
 
-AGE_GROUPS = %w[ child adult ].freeze
-SPECIALITIES = %w[ nf1 nf2-swn ]
+DISCIPLINES = %w[ children adults multidisciplinary].freeze
+EXPERTISES = [
+  { name: "Nuerofibromatosis Type-1", abbreviation: "NF1" },
+  { name: "Nuerofibromatosis Type-2 - Related Schwannomatosis", abbreviation: "NF2-SWN" },
+  { name: "Schwannomatosis", abbreviation: "SWN" }
+]
+SPECIALTIES = %w[ cancer plastic_surgery plexiform Neurology Neurosurgery].freeze
+
+DISCIPLINES.each do |d|
+  Discipline.create! name: d
+end
+
+EXPERTISES.each do |e|
+  Expertise.create! name: e[:name], abbreviation: e[:abbreviation]
+end
+
+SPECIALTIES.each do |s|
+  Specialty.create! name: s.tr("_", " ")
+end

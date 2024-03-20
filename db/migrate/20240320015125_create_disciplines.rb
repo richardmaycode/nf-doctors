@@ -1,6 +1,6 @@
-class CreateAgeGroups < ActiveRecord::Migration[7.1]
+class CreateDisciplines < ActiveRecord::Migration[7.1]
   def change
-    create_table :age_groups do |t|
+    create_table :disciplines do |t|
       t.string :name
       t.string :description
 
