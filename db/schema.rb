@@ -30,6 +30,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_20_153759) do
     t.integer "kind"
     t.string "value"
     t.bigint "facility_id", null: false
+    t.integer "use"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["facility_id"], name: "index_contacts_on_facility_id"
@@ -37,7 +38,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_20_153759) do
 
   create_table "disciplines", force: :cascade do |t|
     t.string "name"
-    t.string "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -68,12 +68,16 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_20_153759) do
   end
 
   create_table "facilities", force: :cascade do |t|
-    t.string "name", limit: 100
+    t.string "name", limit: 100, null: false
+    t.string "department"
     t.text "details"
-    t.integer "status"
+    t.integer "status", default: 0, null: false
+    t.integer "visibility", default: 0, null: false
+    t.bigint "source_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_facilities_on_name", unique: true
+    t.index ["source_id"], name: "index_facilities_on_source_id"
   end
 
   create_table "facilities_specialties", force: :cascade do |t|
@@ -83,6 +87,12 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_20_153759) do
     t.datetime "updated_at", null: false
     t.index ["facility_id"], name: "index_facilities_specialties_on_facility_id"
     t.index ["specialty_id"], name: "index_facilities_specialties_on_specialty_id"
+  end
+
+  create_table "sources", force: :cascade do |t|
+    t.string "name", limit: 100, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "specialties", force: :cascade do |t|
@@ -108,6 +118,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_20_153759) do
   add_foreign_key "disciplines_facilities", "facilities"
   add_foreign_key "expertises_facilities", "expertises"
   add_foreign_key "expertises_facilities", "facilities"
+  add_foreign_key "facilities", "sources"
   add_foreign_key "facilities_specialties", "facilities"
   add_foreign_key "facilities_specialties", "specialties"
   add_foreign_key "staff_members", "facilities"
