@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_03_20_153759) do
+ActiveRecord::Schema[7.1].define(version: 2024_03_23_163055) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -29,6 +29,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_20_153759) do
   create_table "contacts", force: :cascade do |t|
     t.integer "kind"
     t.string "value"
+    t.text "note"
     t.bigint "facility_id", null: false
     t.integer "use"
     t.datetime "created_at", null: false
@@ -71,13 +72,20 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_20_153759) do
     t.string "name", limit: 100, null: false
     t.string "department"
     t.text "details"
+    t.boolean "open", default: true, null: false
     t.integer "status", default: 0, null: false
     t.integer "visibility", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "facilities_sources", force: :cascade do |t|
+    t.bigint "facility_id", null: false
     t.bigint "source_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["name"], name: "index_facilities_on_name", unique: true
-    t.index ["source_id"], name: "index_facilities_on_source_id"
+    t.index ["facility_id"], name: "index_facilities_sources_on_facility_id"
+    t.index ["source_id"], name: "index_facilities_sources_on_source_id"
   end
 
   create_table "facilities_specialties", force: :cascade do |t|
@@ -118,7 +126,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_20_153759) do
   add_foreign_key "disciplines_facilities", "facilities"
   add_foreign_key "expertises_facilities", "expertises"
   add_foreign_key "expertises_facilities", "facilities"
-  add_foreign_key "facilities", "sources"
+  add_foreign_key "facilities_sources", "facilities"
+  add_foreign_key "facilities_sources", "sources"
   add_foreign_key "facilities_specialties", "facilities"
   add_foreign_key "facilities_specialties", "specialties"
   add_foreign_key "staff_members", "facilities"
